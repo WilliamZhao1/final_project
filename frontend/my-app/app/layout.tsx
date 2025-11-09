@@ -11,8 +11,6 @@ import Link from "next/link"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { BiHomeAlt2 } from "react-icons/bi";
 
-
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -21,25 +19,31 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <main className="flex w-full justify-center">
+        <div className="flex w-full justify-center">
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
                 <NavigationMenuLink asChild >
                   <Avatar>
-                    <BiHomeAlt2 />
+                    <AvatarFallback>
+                      <BiHomeAlt2 />
+                    </AvatarFallback>
                   </Avatar>
                 </NavigationMenuLink>
               </NavigationMenuItem>
 
-              <NavigationMenuLink asChild >
-                <Link href="/docs">Option Pricer</Link>
-              </NavigationMenuLink>
+              <NavigationMenuItem>
+                <NavigationMenuLink asChild >
+                  <Link href="/docs">Option Pricer</Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
 
             </NavigationMenuList>
           </NavigationMenu>
-        </main>
+
+        </div>
         {children}
+
       </body>
     </html >
   );
