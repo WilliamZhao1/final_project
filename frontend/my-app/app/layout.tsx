@@ -34,7 +34,7 @@ export default function RootLayout({
 
               <NavigationMenuItem>
                 <NavigationMenuLink asChild >
-                  <Link href="/docs">Option Pricer</Link>
+                  <Link href="/option-pricer">Option Pricer</Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
 
