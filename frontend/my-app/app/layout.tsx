@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div className="flex w-full justify-center">
+        <main className="flex w-full justify-center">
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
@@ -38,7 +38,7 @@ export default function RootLayout({
 
             </NavigationMenuList>
           </NavigationMenu>
-        </div>
+        </main>
         {children}
       </body>
     </html >
