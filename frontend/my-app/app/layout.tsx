@@ -19,31 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div className="flex w-full justify-center">
-          <NavigationMenu>
-            <NavigationMenuList>
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild >
-                  <Avatar>
-                    <AvatarFallback>
-                      <BiHomeAlt2 />
-                    </AvatarFallback>
-                  </Avatar>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild >
-                  <Link href="/option-pricer">Option Pricer</Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-
-            </NavigationMenuList>
-          </NavigationMenu>
-
-        </div>
         {children}
-
       </body>
     </html >
   );
