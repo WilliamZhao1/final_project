@@ -41,13 +41,20 @@ export default function Page() {
             </Breadcrumb>
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-          <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-            <div className="bg-muted/50 aspect-video rounded-xl" />
-            <div className="bg-muted/50 aspect-video rounded-xl" />
-            <div className="bg-muted/50 aspect-video rounded-xl" />
+        <div className="flex h-full w-full gap-4 p-4 pt-0">
+
+          <div className="w-1/3 bg-muted/50 rounded-xl shadow"></div>
+
+          <div className="grid w-2/3 grid-cols-2 grid-rows-2 gap-4">
+
+            <div className="bg-muted/50 rounded-lg shadow p-4"></div>
+
+            <div className="bg-muted/50 rounded-lg shadow p-4"></div>
+
+            <div className="bg-muted/50 rounded-lg shadow p-4"></div>
+
+            <div className="bg-muted/50 rounded-lg shadow p-4"></div>
           </div>
-          <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" />
         </div>
       </SidebarInset>
     </SidebarProvider>
