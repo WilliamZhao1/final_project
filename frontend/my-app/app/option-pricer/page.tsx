@@ -13,6 +13,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
+import { OptionPricerForm } from "./_components/option-pricer-form"
 
 export default function Page() {
   return (
@@ -30,12 +31,12 @@ export default function Page() {
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
                   <BreadcrumbLink href="#">
-                    Building Your Application
+                    Home
                   </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                  <BreadcrumbPage>Option Pricer</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
@@ -43,7 +44,9 @@ export default function Page() {
         </header>
         <div className="flex h-full w-full gap-4 p-4 pt-0">
 
-          <div className="w-1/3 bg-muted/50 rounded-xl shadow"></div>
+          <div className="w-1/3">
+            <OptionPricerForm />
+          </div>
 
           <div className="grid w-2/3 grid-cols-2 grid-rows-2 gap-4">
 
