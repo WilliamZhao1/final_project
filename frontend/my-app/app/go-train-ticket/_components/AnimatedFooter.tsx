@@ -5,7 +5,7 @@ import { Menu, Search, ShoppingBag, User } from 'lucide-react';
 import Marquee from "react-fast-marquee";
 import TransitMarquee from './TransitMarquee';
 
-const AnimatedHeader = () => {
+const AnimatedHeader = ({remainingTime}) => {
     // 1. CONFIGURATION
     // Define your color range here. The header will fade smoothly from one to the next.
     // For a perfect loop, the code automatically handles connecting the end back to the start.
@@ -47,44 +47,23 @@ const AnimatedHeader = () => {
 
             {/* 3. YOUR HEADER COMPONENT */}
             <header
-                className="text-white flex flex-col items-center relative"
+                className="w-screen h-60 text-white flex flex-col items-center relative"
                 style={{
                     // We apply the animation here. 
                     // 'linear' ensures constant speed, 'infinite' makes it loop forever.
                     animation: `headerColorLoop ${duration}s linear infinite`
                 }}
             >
-                <div className="mt-5 mb-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="80" height="auto" viewBox="-23 -11 46 22">
-                        <title>GO Transit logo</title>
-                        <defs>
-                            <clipPath id="c">
-                                <path d="m-23-11h46v22h-46zM23 1v-2h-34v-10h-2v22h2V1z" />
-                            </clipPath>
-                        </defs>
-                        <path clipPath="url(#c)" fill="#ffffff" d="m-1 0a11 11 0 1 0-11 11h11zm2 0a1 1 0 0 0 22 0A1 1 0 0 0 1 0z" />
-                    </svg>
 
+                <div className="text-center p-10 pt-18 pb-2">
+                    <p className='text-lg font-normal' >Please show proof of your ticket to the Customer Protective Officers when asked</p>
                 </div>
 
-                <TransitMarquee />
-
-                <div className="pb-6">
-                    <p className='text-[15px] font-medium' >Union Station GO to Oakville GO</p>
+                <div className="text-center">
+                    <p className="text-4xl font-extralight">
+                        {remainingTime}
+                    </p>
                 </div>
-
-                <div
-                    // Tailwind classes for shape (circle), border (white outline), and size
-                    className="absolute w-6 h-6 rounded-full border-[3px] border-white z-10"
-                    style={{
-                        // 1. Custom Position (Change these values to move it)
-                        top: '146px',
-                        // left: '50px',
-
-                        // 2. The Shared Animation
-                        // We reuse the exact same animation name defined in generateKeyframes
-                        animation: `headerColorLoop ${duration}s linear infinite`
-                    }}></div>
 
             </header>
         </div>
