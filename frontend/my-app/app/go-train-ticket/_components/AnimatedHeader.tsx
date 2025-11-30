@@ -5,7 +5,12 @@ import { Menu, Search, ShoppingBag, User } from 'lucide-react';
 import Marquee from "react-fast-marquee";
 import TransitMarquee from './TransitMarquee';
 
-const AnimatedHeader = () => {
+interface AnimatedHeaderProps {
+    startStation: string;
+    endStation: string;
+}
+
+const AnimatedHeader: React.FC<AnimatedHeaderProps> = ({ startStation, endStation }) => {
     // 1. CONFIGURATION
     // Define your color range here. The header will fade smoothly from one to the next.
     // For a perfect loop, the code automatically handles connecting the end back to the start.
@@ -70,7 +75,7 @@ const AnimatedHeader = () => {
                 <TransitMarquee />
 
                 <div className="pb-6">
-                    <p className='text-[15px] font-medium' >Union Station GO to Oakville GO</p>
+                    <p className='text-[15px] font-medium' >{startStation} to {endStation}</p>
                 </div>
 
                 <div

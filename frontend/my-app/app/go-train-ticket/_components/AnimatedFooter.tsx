@@ -5,7 +5,7 @@ import { Menu, Search, ShoppingBag, User } from 'lucide-react';
 import Marquee from "react-fast-marquee";
 import TransitMarquee from './TransitMarquee';
 
-const AnimatedHeader = ({remainingTime}) => {
+const AnimatedHeader = ({ remainingTime }: { remainingTime: string }) => {
     // 1. CONFIGURATION
     // Define your color range here. The header will fade smoothly from one to the next.
     // For a perfect loop, the code automatically handles connecting the end back to the start.

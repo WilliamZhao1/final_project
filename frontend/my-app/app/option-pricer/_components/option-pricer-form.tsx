@@ -51,7 +51,7 @@ export function OptionPricerForm() {
                 <form onSubmit={form.handleSubmit(onSubmit)}>
                     <FieldGroup>
                         <Controller
-                            name="OptionPricerForm"
+                            name="spotPrice"
                             control={form.control}
                             render={({ field, fieldState }) => (
                                 <Field data-invalid={fieldState.invalid} orientation="horizontal">

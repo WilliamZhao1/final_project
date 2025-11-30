@@ -6,9 +6,74 @@ import AnimatedHeader from './_components/AnimatedHeader';
 import AnimatedFooter from './_components/AnimatedFooter';
 import { LiaBarcodeSolid } from "react-icons/lia";
 
-export default function App() {
+interface SelectProps {
+    value: string;
+    onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+    options: string[];
+    placeholder: string;
+    name: string;
+}
+
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+    children: React.ReactNode;
+    className?: string;
+}
+
+interface TicketViewProps {
+    startStation: string;
+    endStation: string;
+    passengerCount: string;
+    onBack: () => void;
+}
+
+interface FormData {
+    startStation: string;
+    endStation: string;
+    passengers: string;
+}
+
+const Select: React.FC<SelectProps> = ({ value, onChange, options, placeholder, name }) => (
+    <div className="relative">
+        <select
+            name={name}
+            value={value}
+            onChange={onChange}
+            className="flex h-10 w-full items-center justify-between rounded-md border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 appearance-none"
+        >
+            <option value="" disabled>{placeholder}</option>
+            {options.map((opt) => (
+                <option key={opt} value={opt}>{opt}</option>
+            ))}
+        </select>
+        <div className="absolute right-3 top-3 pointer-events-none opacity-50">
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+        </div>
+    </div>
+);
+
+const Button: React.FC<ButtonProps> = ({ children, onClick, className = "" }) => (
+    <button
+        onClick={onClick}
+        className={`inline-flex h-10 items-center justify-center rounded-md bg-purple-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-purple-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 w-full ${className}`}
+    >
+        {children}
+    </button>
+);
+
+
+
+const TicketView: React.FC<TicketViewProps> = ({ startStation, endStation, passengerCount, onBack }) => {
+    const [ticketNumber] = useState(() => {
+        const prefix = "MZ655";
+        // Generate 5 random digits
+        const randomDigits = Math.floor(Math.random() * 100000).toString().padStart(5, '0');
+        return `${prefix}${randomDigits}`;
+    });
+
     const [currentDate, setCurrentDate] = useState(new Date());
-    const [activationTime] = useState(() => {
+    const [activationTime, setActivationTime] = useState(() => {
         const d = new Date();
         d.setMinutes(d.getMinutes());
         d.setSeconds(d.getSeconds());
@@ -25,7 +90,7 @@ export default function App() {
             setCurrentDate(now);
 
             // Calculate elapsed time in milliseconds
-            let diff = now - activationTime;
+            let diff = now.getTime() - activationTime.getTime();
 
             // 1. CHECK FOR 2-HOUR RESET
             const TWO_HOURS_MS = 2 * 60 * 60 * 1000;
@@ -66,7 +131,7 @@ export default function App() {
         return () => clearInterval(timer);
     }, [activationTime]);
 
-    const formatDate = (date) => {
+    const formatDate = (date: Date) => {
         const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         const month = months[date.getMonth()];
         const day = date.getDate();
@@ -86,7 +151,7 @@ export default function App() {
         <div className="flex flex-col h-screen w-full items-center justify-start">
             <div className="w-full max-w-md h-full flex flex-col bg-white relative">
 
-                <AnimatedHeader />
+                <AnimatedHeader startStation={startStation} endStation={endStation} />
 
                 {/* Ticket Body */}
                 <main className="flex-1 flex flex-col items-center px-4 relative pt-3">
@@ -96,9 +161,9 @@ export default function App() {
 
                         {/* Passengers */}
                         <div className="flex flex-col items-center w-1/3">
-                            <span className="text-[46px] font-normal text-gray-700 -mb-3">x1</span>
+                            <span className="text-[46px] font-normal text-gray-700 -mb-3">x{passengerCount}</span>
                             <span className="text-[19px] font-bold text-gray-700 ">Passenger(s)</span>
-                            <span className="text-s text-gray-600 mt-1">1x Adult</span>
+                            <span className="text-s text-gray-600 mt-1">{passengerCount}x Adult</span>
                         </div>
 
                         {/* Middle Divider & Icon */}
@@ -139,7 +204,7 @@ export default function App() {
 
                     {/* Ticket Number */}
                     <div className="text-center my-2">
-                        <p className="text-lg text-gray-800 font-medium">Ticket Number: <span className="text-gray-700 font-bold">MZ65511098</span></p>
+                        <p className="text-lg text-gray-800 font-medium">Ticket Number: <span className="text-gray-700 font-bold">{ticketNumber}</span></p>
                     </div>
 
                     {/* Barcode Section */}
@@ -166,8 +231,6 @@ export default function App() {
                         <div className="absolute z-10 bg-white px-[11px] py-[2px]">
                             <span className="text-green-600 font-normal text-[22px]"
                                 style={{
-                                    // 3. APPLY ANIMATION
-                                    // '2s' is the speed. Change to '1s' for faster flashing.
                                     animation: 'flashActive 2s ease-in-out infinite'
                                 }}>
                                 ACTIVE
@@ -187,7 +250,7 @@ export default function App() {
                         </div>
                     </div>
 
-                    <AnimatedFooter remainingTime={remainingTime}/>
+                    <AnimatedFooter remainingTime={remainingTime} />
                 </main>
 
 
@@ -202,6 +265,88 @@ export default function App() {
           animation: scan 3s linear infinite;
         }
       `}</style>
+        </div>
+    );
+}
+
+
+
+
+export default function App() {
+    const [showTicket, setShowTicket] = useState(false);
+    const [formData, setFormData] = useState({
+        startStation: '',
+        endStation: '',
+        passengers: '1'
+    });
+
+    // Sample stations for the dropdowns
+    const stations = [
+        "Union Station GO",
+        "Oakville GO",
+    ];
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        // Basic validation
+        if (!formData.startStation || !formData.endStation) {
+            alert("Please select both a starting and ending station.");
+            return;
+        }
+        setShowTicket(true);
+    };
+
+    if (showTicket) {
+        return (
+            <TicketView
+                startStation={formData.startStation}
+                endStation={formData.endStation}
+                passengerCount={formData.passengers}
+                onBack={() => setShowTicket(false)}
+            />
+        );
+    }
+
+    return (
+        <div className="w-full flex items-top justify-center p-4 font-sans pt-10">
+            <div className="w-full max-w-md bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+                {/* Header */}
+                <div className="bg-purple-600 p-6 text-white">
+                    <p className="text-purple-100 text-sm">Select your route to generate your e-ticket.</p>
+                </div>
+                {/* Form */}
+                <form onSubmit={handleSubmit} className="p-6 space-y-6">
+                    <Select
+                        name="startStation"
+                        value={formData.startStation}
+                        onChange={handleInputChange}
+                        options={stations}
+                        placeholder="Select origin..."
+                    />
+                    <Select
+                        name="endStation"
+                        value={formData.endStation}
+                        onChange={handleInputChange}
+                        options={stations}
+                        placeholder="Select destination..."
+                    />
+                    <Select
+                        name="passengers"
+                        value={formData.passengers}
+                        onChange={handleInputChange}
+                        options={["1", "2", "3", "4", "5", "6"]}
+                        placeholder="Select passengers..."
+                    />
+                    <Button type="submit" className="w-full mt-6 gap-2">
+                        Generate Ticket
+                    </Button>
+                </form>
+            </div>
         </div>
     );
 }
