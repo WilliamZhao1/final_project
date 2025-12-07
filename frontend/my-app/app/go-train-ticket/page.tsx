@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { BsArrowRight } from "react-icons/bs";
-import AnimatedHeader from './_components/AnimatedHeader';
+import AnimatedHeader, { ThemeVariant } from './_components/AnimatedHeader';
 import AnimatedFooter from './_components/AnimatedFooter';
 import { LiaBarcodeSolid } from "react-icons/lia";
 
@@ -65,6 +65,17 @@ const Button: React.FC<ButtonProps> = ({ children, onClick, className = "" }) =>
 
 
 const TicketView: React.FC<TicketViewProps> = ({ startStation, endStation, passengerCount, onBack }) => {
+
+    const [currentTheme, setCurrentTheme] = useState<ThemeVariant>('purple');
+
+    // Randomize ONCE here
+    useEffect(() => {
+        const isGreen = Math.random() < 0.5;
+        if (isGreen) {
+            setCurrentTheme('green');
+        }
+    }, []);
+
     const [ticketNumber] = useState(() => {
         const prefix = "MZ655";
         // Generate 5 random digits
@@ -82,7 +93,7 @@ const TicketView: React.FC<TicketViewProps> = ({ startStation, endStation, passe
     const [elapsedTime, setElapsedTime] = useState("00:00:00");
     const [remainingTime, setRemainingTime] = useState("04:00:00");
 
-    const activeColor = '#8b21c9';
+    const activeColor = currentTheme === 'purple' ? '#58157d' : '#5a8351';
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -151,7 +162,7 @@ const TicketView: React.FC<TicketViewProps> = ({ startStation, endStation, passe
         <div className="flex flex-col h-screen w-full items-center justify-start">
             <div className="w-full max-w-md h-full flex flex-col bg-white relative">
 
-                <AnimatedHeader startStation={startStation} endStation={endStation} />
+                <AnimatedHeader startStation={startStation} endStation={endStation} theme={currentTheme} />
 
                 {/* Ticket Body */}
                 <main className="flex-1 flex flex-col items-center px-4 relative pt-3">
@@ -250,7 +261,7 @@ const TicketView: React.FC<TicketViewProps> = ({ startStation, endStation, passe
                         </div>
                     </div>
 
-                    <AnimatedFooter remainingTime={remainingTime} />
+                    <AnimatedFooter remainingTime={remainingTime} theme={currentTheme} />
                 </main>
 
 
@@ -284,6 +295,7 @@ export default function App() {
     const stations = [
         "Union Station GO",
         "Oakville GO",
+        "Erindale GO",
     ];
 
     const handleInputChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

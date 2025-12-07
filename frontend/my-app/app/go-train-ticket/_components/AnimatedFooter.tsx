@@ -5,29 +5,42 @@ import { Menu, Search, ShoppingBag, User } from 'lucide-react';
 import Marquee from "react-fast-marquee";
 import TransitMarquee from './TransitMarquee';
 
-const AnimatedHeader = ({ remainingTime }: { remainingTime: string }) => {
-    // 1. CONFIGURATION
-    // Define your color range here. The header will fade smoothly from one to the next.
-    // For a perfect loop, the code automatically handles connecting the end back to the start.
-    const [colors, setColors] = useState([
-        '#58157d',
-        '#8b21c9',
-    ]);
+// Reuse the same theme definition or import it if you move it to a shared file
+const THEMES = {
+    purple: {
+        id: 'purple',
+        colors: ['#58157d', '#8b21c9']
+    },
+    green: {
+        id: 'green',
+        colors: ['#133708', '#2a7f13']
+    }
+};
 
-    const [duration, setDuration] = useState(2.5); // Seconds for one full cycle
+export type ThemeVariant = 'purple' | 'green';
 
-    // 2. LOGIC TO GENERATE CSS KEYFRAMES
+interface AnimatedFooterProps { 
+    remainingTime: string; 
+    theme: ThemeVariant; // New Prop
+}
+
+const AnimatedFooter = ({ remainingTime, theme }: AnimatedFooterProps) => {
+    
+    // Select active theme from prop
+    const activeTheme = THEMES[theme];
+    
+    const [duration] = useState(2.25);
+
+    // LOGIC TO GENERATE CSS KEYFRAMES
     const generateKeyframes = () => {
-        // Ensure the animation loops smoothly by making sure the last color matches the first
-        // If the user didn't manually add the start color to the end, we conceptually add it for the math
-        let safeColors = [...colors];
+        let safeColors = [...activeTheme.colors];
+
         if (safeColors[0] !== safeColors[safeColors.length - 1]) {
             safeColors.push(safeColors[0]);
         }
 
         const stepSize = 100 / (safeColors.length - 1);
 
-        // Build the CSS string
         let keyframeSteps = '';
         safeColors.forEach((color, index) => {
             const percentage = Math.round(index * stepSize);
@@ -35,23 +48,22 @@ const AnimatedHeader = ({ remainingTime }: { remainingTime: string }) => {
         });
 
         return `
-      @keyframes headerColorLoop {
+      @keyframes footerColorLoop-${activeTheme.id} {
         ${keyframeSteps}
       }
     `;
     };
 
+    const animationName = `footerColorLoop-${activeTheme.id}`;
+
     return (
         <div className="bg-gray-50 font-sans">
             <style>{generateKeyframes()}</style>
 
-            {/* 3. YOUR HEADER COMPONENT */}
             <header
-                className="w-screen h-60 text-white flex flex-col items-center relative"
+                className="w-screen h-60 text-white flex flex-col items-center relative transition-colors duration-500"
                 style={{
-                    // We apply the animation here. 
-                    // 'linear' ensures constant speed, 'infinite' makes it loop forever.
-                    animation: `headerColorLoop ${duration}s linear infinite`
+                    animation: `${animationName} ${duration}s linear infinite`
                 }}
             >
 
@@ -70,4 +82,4 @@ const AnimatedHeader = ({ remainingTime }: { remainingTime: string }) => {
     );
 };
 
-export default AnimatedHeader;
+export default AnimatedFooter;
