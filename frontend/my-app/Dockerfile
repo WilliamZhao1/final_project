@@ -1,30 +1,46 @@
-# 1. Base image
-FROM node:20-alpine AS deps
+# 1. Base (Define the "base" image here so we can reuse it)
+FROM node:20-alpine AS base
+
+# Install libc6-compat (Required for Next.js process management on Alpine)
+RUN apk add --no-cache libc6-compat
 
 # 2. Dependencies
-FROM node:20-alpine AS deps
+FROM base AS deps
 WORKDIR /app
+
+# Copy package files
 COPY package.json package-lock.json* ./
+
+# Install dependencies
 RUN npm ci
 
 # 3. Builder
-FROM node:20-alpine AS deps
+FROM base AS builder
 WORKDIR /app
+
+# Copy node_modules from deps stage
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
+# Build the project
+# Note: Ensure .env files or ARG variables are present if needed for build time
 RUN npm run build
 
 # 4. Production Image
-FROM node:20-alpine AS deps
+FROM base AS runner
 WORKDIR /app
+
 ENV NODE_ENV=production
 
-# Create a system user so we don't run as root (security best practice)
+# Create system user
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copy only the necessary files from the build step
+# Copy public folder
 COPY --from=builder /app/public ./public
+
+# Copy the standalone build and static files
+# Ensure "output": "standalone" is in your next.config.js
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
